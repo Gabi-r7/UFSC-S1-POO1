@@ -19,4 +19,5 @@ while True:
                     marcada = '*'
                     break
 
+
         print(marcada)
