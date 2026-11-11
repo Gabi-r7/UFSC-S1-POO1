@@ -20,8 +20,6 @@ for _ in seres:
         ganhadores.append(_)
 
 if cont > 1:
-
-        
     if len(sorted(ganhadores)[0]) < len(sorted(ganhadores)[1]):
         ganhador = sorted(ganhadores)[0]
     else:
