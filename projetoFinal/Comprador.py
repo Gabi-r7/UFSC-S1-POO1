@@ -1,3 +1,4 @@
+#COMPRADOR
 class Comprador:
     def __init__(self, nome, senha, iden, email, endereco):
         self.nome = nome

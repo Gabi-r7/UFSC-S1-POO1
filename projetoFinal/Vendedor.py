@@ -1,3 +1,4 @@
+#VENDEDOR
 from Produto import Produto
 from Comprador import Comprador
 
@@ -75,6 +76,3 @@ class Vendedor(Comprador):
         for item in self.produtos:
             print(f"ID: {item['ID']} | Nome: {item['Nome']} | "f"Categoria: {item['Categoria']} | Preço: R$ {item['Preço']:.2f} | "f"Estoque: {item['Estoque']}")
         return self.produtos
-
-    def Faturamento(self):
-        return self.faturamento
