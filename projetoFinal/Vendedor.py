@@ -18,11 +18,14 @@ class Vendedor(Comprador):
             'Preço': prod.preco,
             'Estoque': prod.estoque
         }
-        self.produtos.append(dic)
 
         if isinstance(produtos, dict):
+            if prod.iden not in [item['ID'] for item in self.produtos]:
+                self.produtos.append(dic)
             produtos[prod.iden] = prod
         else:
+            if prod not in produtos:
+                self.produtos.append(dic)
             produtos.append(prod)
         
     def atualizaEstoque(self, prod, valor):
@@ -53,22 +56,25 @@ class Vendedor(Comprador):
         if produto.preco < 0 or quantidade <= 0:
             return False
 
+        if produto.estoque < quantidade:
+            print(f"Estoque insuficiente para o produto {produto.nome}.")
+            return False
+
         total = produto.preco * quantidade
         self.faturamento += total
-        self.vendas.append({
-            "produto_id": produto.iden,
-            "produto_nome": produto.nome,
-            "quantidade": quantidade,
-            "valor": total
-        })
+        self.vendas.append({"produto_id": produto.iden, "produto_nome": produto.nome, "quantidade": quantidade, "valor": total})
         self.atualizaEstoque(produto, produto.estoque - quantidade)
         return True
 
-# a5 = Produto('hufdiufduhsi', 1, 'casa', 100, 10)
-# b1 = Vendedor('joao', 123, 1, 'email1@gmail.com', 'casa')
-# b1.addProduto(a5)
-# print(b1.produtos)
+    def VerProdutosVendedor(self):
+        if not self.produtos:
+            print(f"Você não possui produtos cadastrados.")
+            return []
 
-# b1.atualizaPreco(a5, 200)
-# b1.atualizaEstoque(a5, 10000000)
-# print(b1.produtos)
+        print(f"Produtos:")
+        for item in self.produtos:
+            print(f"ID: {item['ID']} | Nome: {item['Nome']} | "f"Categoria: {item['Categoria']} | Preço: R$ {item['Preço']:.2f} | "f"Estoque: {item['Estoque']}")
+        return self.produtos
+
+    def Faturamento(self):
+        return self.faturamento

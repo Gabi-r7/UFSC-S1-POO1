@@ -1,12 +1,25 @@
 #produto
 class Produto:
-    def __init__(self, nome, iden, categoria, preco, estoque, vendedor):
+    def __init__(self, nome, iden, categoria, preco, estoque, vendedor=None):
         self.nome = nome
         self.iden = iden
         self.categoria = categoria
         self.preco = preco
         self.estoque = estoque
         self.vendedor = vendedor
+
+    def __repr__(self):
+        return self.__str__()
+
+    def __str__(self):
+        return (
+            f'ID: {self.iden} | Nome: {self.nome} '
+            f'| Categoria: {self.categoria} | Preco: R$ {self.preco:.2f} '
+            f'| Estoque: {self.estoque}'
+        )
+
+    def __repr__(self):
+        return str(self)
     
     def getID(self):
         return self.iden
@@ -25,6 +38,3 @@ class Produto:
     
 a1 = Produto('João', 123, 'Eletrodoméstico', 120, 10, 0)
 a2 = Produto('aaaa', 12, 'Eletrodoméstico', 100, 5, 0)
-
-#for i in range(len(a1.getInfo())):
-    #print(f'{lista[i]}: {a1.getInfo()[i]}')

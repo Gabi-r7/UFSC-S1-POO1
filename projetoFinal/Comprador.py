@@ -11,20 +11,27 @@ class Comprador:
         self.valorGasto = 0.0
 
     def Comprar(self, produto_id, produtos, quantidade):
-        if produto_id not in self.carrinho or produto_id not in produtos.values():
+        if produto_id not in self.carrinho:
+            return False
+
+        if produto_id not in produtos:
             return False
 
         produto = produtos[produto_id]
+        if quantidade <= 0:
+            print('Quantidade invalida.')
+            return False
+
         if produto.estoque < quantidade:
             print(f"Estoque insuficiente para {produto.nome}.")
             return False
 
         self.carrinho.remove(produto_id)
-        self.compras.append(produtos[produto_id])
-        self.valorGasto += produtos[produto_id].preco
+        self.compras.append(produto)
+        self.valorGasto += produto.preco * quantidade
 
         if produto.vendedor is not None:
-            produto.vendedor.Faturar(produto, quantidade)
+            return produto.vendedor.Faturar(produto, quantidade)
         return True
 
     def FinalizarCarrinho(self, produtos):
@@ -57,10 +64,8 @@ class Comprador:
     def GetCarrinho(self, produtos):
         aux = []
         for produto_id in self.carrinho:
-            for p in produtos:
-                if p.iden == produto_id:
-                    aux.append(p)
-                    break
+            if produto_id in produtos:
+                aux.append(produtos[produto_id])
         return aux
 
     def GetCompras(self):
