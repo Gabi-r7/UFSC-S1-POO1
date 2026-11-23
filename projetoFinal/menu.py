@@ -123,7 +123,7 @@ while escolha != 0:
             print('1 - Visualizar produtos\n2 - Adicionar um produto aos favoritos\n3 - Filtro de produtos\n4 - Opções do carrinho')
 
             if isinstance(usuario_atual, Vendedor):
-                print('5 - Ver seus produtos (vendedor)\n6 - Adicionar produto (vendedor)\n7 - Atualizar preço do produto (vendedor)\n8 - Atualizar estoque do produto (vendedor)\n9 - Ver faturamento (vendedor)')
+                print('5 - Ver seus produtos (vendedor)\n6 - Adicionar produto (vendedor)\n7 - Atualizar preço do produto (vendedor)\n8 - Atualizar estoque do produto (vendedor)\n9 - Ver faturamento (vendedor)\n10 - Faturamento total (vendedor)')
 
             print('0 - Voltar para o menu anterior')
     
@@ -357,6 +357,10 @@ while escolha != 0:
                             f'Quantidade: {venda["quantidade"]} | '
                             f'Valor: R$ {venda["valor"]:.2f}'
                         )
+                time.sleep(1)
+            elif isinstance(usuario_atual, Vendedor) and menu2escolha == 10:
+                faturamento_total = sum(vendedor.faturamento for vendedor in vendedores)
+                print(f'Faturamento total de todos os vendedores: R$ {faturamento_total:.2f}')
                 time.sleep(1)
             else:
                 if menu2escolha == 0:
