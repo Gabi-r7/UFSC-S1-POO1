@@ -5,38 +5,27 @@ from Vendedor import Vendedor
 
 compradores = []
 vendedores = []
-produtos = []
+produtos = {}
+categorias = set()
 
-compradores = [
-    Comprador("Ana", "123", 1, "ana@email.com", "Rua das Flores"),
-    Comprador("Carlos", "123", 2, "carlos@email.com", "Centro"),
-    Comprador("Loja sla", "123", 3, "loja@email.com", "Rua da Loja")
-]
-
-vendedores = [
-    Vendedor("Loja Tech", "123", 4, "lojatech@email.com", "Rua da Loja")
-]
-
-# Como vendedor herda comprador, adicione-o também nesta lista
-compradores.append(vendedores[0])
-
-produtos = {
-    0: Produto("Notebook", 0, "Informática", 3500.0, 5, vendedores[0]),
-    1: Produto("Mouse", 1, "Informática", 80.0, 20, vendedores[0]),
-    2: Produto("Camiseta", 2, "Vestuário", 50.0, 15, vendedores[0]),
-    3: Produto("Café", 3, "Alimentos", 25.0, 30, vendedores[0])
-}
-
-for produto in produtos.values():
-    vendedores[0].addProduto(produto, produtos)
 
 isVendedor = False
 idF = 0
-idP = max(produtos.keys(), default=-1) + 1
+idP = 0
 usuario_atual = None
 escolha = -1
 menu1escolha = -1
 menu2escolha = -1
+
+
+def CarrinhoVazio():
+    if len(produtos) == 0:
+        print('Não há produtos disponíveis.')
+        time.sleep(1)
+        return True
+    else:
+        return False
+
 
 while escolha != 0:
 
@@ -45,7 +34,7 @@ while escolha != 0:
     if escolha == 1:
         menu1escolha = -1
         while menu1escolha != 0:
-            menu1escolha = int(input('\n-------------------- Menu de usuários --------------------\n1 - Cadastrar novo usuário\n2 - Fazer login\n3 - Verificar compradores\n4 - Verificar vendedores\n5 - Deslogar\n0 - Voltar ao menu principal\nDigite sua escolha: '))
+            menu1escolha = int(input('\n-------------------- Menu de usuários --------------------\n1 - Cadastrar novo usuário\n2 - Fazer login\n3 - Listar vendedores\n4 - Deslogar\n0 - Voltar ao menu principal\nDigite sua escolha: '))
             if menu1escolha == 1:
                 print('Cadastro de usuário')
                 idF += 1
@@ -53,14 +42,14 @@ while escolha != 0:
                 email = str(input('Email: '))
                 senha = str(input('Senha: '))
                 endereco = str(input('Endereço: '))
-                tipo = str(input('Tipo (comprador/vendedor): ')).lower()
+                tipo = int(input('Tipo (1 para comprador / 2 para vendedor): '))
 
-                if tipo == 'comprador':
+                if tipo == 1:
                     usuario = Comprador(nome, senha, idF, email, endereco)
                     compradores.append(usuario)
                     print('Usuário cadastrado com sucesso!')
                     time.sleep(1)
-                elif tipo == 'vendedor':
+                elif tipo == 2:
                     usuario = Vendedor(nome, senha, idF, email, endereco)
                     compradores.append(usuario)
                     vendedores.append(usuario)
@@ -87,34 +76,17 @@ while escolha != 0:
                 else:
                     print('Email ou senha incorretos. Tente novamente.')
                     time.sleep(1)
-
-            elif menu1escolha == 3 and usuario_atual is not None:
-                if not isinstance(usuario_atual, Vendedor):
-                    print('Você é um comprador.')
-                    time.sleep(1)
-                else:
-                    if len(compradores) == 0:
-                        print('Não há compradores cadastrados.')
-                        time.sleep(1)
-                    else:
-                        print('Lista de compradores:')
-                        for comprador in compradores:
-                            print(f'ID: {comprador.iden}, Nome: {comprador.nome}, Email: {comprador.email}, Endereço: {comprador.endereco}')
                 
-            elif menu1escolha == 4 and usuario_atual is not None:
-                if isinstance(usuario_atual, Comprador) and isinstance(usuario_atual, Vendedor):
-                    print('Você é um vendedor.')
+            elif menu1escolha == 3 and usuario_atual is not None:
+                if len(vendedores) == 0:
+                    print('Não há vendedores cadastrados.')
                     time.sleep(1)
                 else:
-                    if len(vendedores) == 0:
-                        print('Não há vendedores cadastrados.')
-                        time.sleep(1)
-                    else:
-                        print('Lista de vendedores:')
-                        for vendedor in vendedores:
-                            print(f'ID: {vendedor.iden}, Nome: {vendedor.nome}, Email: {vendedor.email}, Endereço: {vendedor.endereco}')
+                    print('Lista de vendedores:')
+                    for vendedor in vendedores:
+                        print(f'ID: {vendedor.iden}, Nome: {vendedor.nome}, Email: {vendedor.email}, Endereço: {vendedor.endereco}')
 
-            elif menu1escolha == 5 and usuario_atual is not None:
+            elif menu1escolha == 4 and usuario_atual is not None:
                 usuario_atual = None
                 print('Usuário deslogado. ')
                 time.sleep(1)
@@ -135,81 +107,103 @@ while escolha != 0:
         menu2escolha = -1
         while menu2escolha != 0:
                
-            print('-------------------- Menu de produtos --------------------\n1 - Visualizar produtos\n2 - Adicionar um produto aos favoritos\n3 - Filtro de produtos\n4 - Opções do carrinho\n0 - Voltar para o menu anterior')
+            print('-------------------- Menu de produtos --------------------\n1 - Visualizar produtos\n2 - Adicionar um produto aos favoritos\n3 - Filtro de produtos\n4 - Opções do carrinho')
 
             if isinstance(usuario_atual, Vendedor):
                 print('5 - Ver seus produtos (vendedor)\n6 - Adicionar produto (vendedor)\n7 - Atualizar preço do produto (vendedor)\n8 - Atualizar estoque do produto (vendedor)\n9 - Ver faturamento (vendedor)')
+
+            print('0 - Voltar para o menu anterior')
     
             menu2escolha = int(input('Digite sua escolha: '))
 
             if menu2escolha == 1: 
-                if len(produtos) == 0:
-                    print('Não há produtos disponíveis.')
-                    time.sleep(1)
-                    continue
-                else:
+                if not CarrinhoVazio():
                     print('Lista de produtos disponíveis:')
                     for produto in produtos.values():
                         print(f'ID: {produto.iden} | Nome: {produto.nome} | Categoria: {produto.categoria} | Preço: {produto.preco} | Estoque: {produto.estoque}\n')
                 time.sleep(1)
             elif menu2escolha == 2 and usuario_atual is not None:
-                idAux = int(input('Digite o ID do produto que deseja adicionar aos favoritos: '))
-                produto_encontrado = None
+                
+                if not CarrinhoVazio():
+                    
+                    idAux = int(input('Digite o ID do produto que deseja adicionar aos favoritos: '))
+                    produto_encontrado = None
 
-                for produto in produtos.values():
-                    if produto.iden == idAux:
-                        produto_encontrado = produto
-                        break
-            
-                if produto_encontrado is not None:
-                    if usuario_atual is not None:
-                        if usuario_atual.FavoritarProduto(produto_encontrado.iden):
-                            print(f'Produto {produto_encontrado.nome} adicionado aos favoritos.')
-                            time.sleep(1)
+                
+                    for produto in produtos.values():
+                        if produto.iden == idAux:
+                            produto_encontrado = produto
+                            break
+                
+                    if produto_encontrado is not None:
+                        if usuario_atual is not None:
+                            if usuario_atual.FavoritarProduto(produto_encontrado.iden):
+                                print(f'Produto {produto_encontrado.nome} adicionado aos favoritos.')
+                                time.sleep(1)
+                            else:
+                                print('Produto já está nos favoritos.')
+                                time.sleep(1)
                         else:
-                            print('Produto já está nos favoritos.')
+                            print('Você precisa estar logado para favoritar produtos.')
                             time.sleep(1)
                     else:
-                        print('Você precisa estar logado para favoritar produtos.')
+                        print('Produto não encontrado.')
                         time.sleep(1)
-                else:
-                    print('Produto não encontrado.')
-                    time.sleep(1)
-            
+                
             elif menu2escolha == 3:
+                cont = 0
                 auxFiltro = int(input('Escolha o filtro de produtos:\n1 - Filtrar por categoria\n2 - Filtrar por preço\nDigite sua escolha: '))
                 if auxFiltro == 1:
+                    for e in categorias:
+                        cont+=1 
+                        print(f'{cont} - {categorias}')
                     categoria = str(input('Digite a categoria desejada: '))
-                    for produto in produtos.values():
-                        if produto.categoria.lower() == categoria.lower():
-                            print(f'ID: {produto.iden}, Nome: {produto.nome}, Categoria: {produto.categoria}, Preço: {produto.preco}, Estoque: {produto.estoque}')
-                
+                    if not CarrinhoVazio():
+                        for produto in produtos.values():
+                            if produto.categoria.lower() == categoria.lower():
+                                print(f'ID: {produto.iden} | Nome: {produto.nome} | Categoria: {produto.categoria} | Preço: {produto.preco} | Estoque: {produto.estoque}')
+                            else:
+                                print('Categoria não encontrada. ')
+                                continue
+
                 elif auxFiltro == 2:
-                    preco_max = float(input('Digite o preço máximo: '))
-                    for produto in produtos.values():
-                        if produto.preco <= preco_max:
-                            print(f'ID: {produto.iden}, Nome: {produto.nome}, Categoria: {produto.categoria}, Preço: {produto.preco}, Estoque: {produto.estoque}')
+                    if not CarrinhoVazio():
+                        preco_max = float(input('Digite o preço máximo: '))
+                        for produto in produtos.values():
+                            if produto.preco <= preco_max:
+                                print(f'ID: {produto.iden} | Nome: {produto.nome} | Categoria: {produto.categoria} | Preço: {produto.preco} | Estoque: {produto.estoque}')
+                        else:
+                            print('Não há produtos com preço menor ou igual ao valor informado.')
+                            time.sleep(1)
 
             elif menu2escolha == 4 and usuario_atual is not None:
                 opcao_carrinho = int(input('Opções de Carrinho: \n1 - Ver carrinho\n2 - Adicionar ao carrinho\n3 - Remover do carrinho\n4 - Comprar carrinho\nDigite sua escolha: '))
 
-                if opcao_carrinho == 1:
-                    print('Carrinho: ')
-                    print(usuario_atual.GetCarrinho(produtos))
+                if opcao_carrinho == 0:
+                    continue
+
+                elif opcao_carrinho == 1:
+                    if len(usuario_atual.carrinho) == 0:
+                        print('Carrinho vazio. ')
+                    else:
+                        print('Carrinho: ')
+                        print(usuario_atual.GetCarrinho(produtos))
                 elif opcao_carrinho == 2:
                     prod_add = int(input('Digite o ID do produto a ser adicionado do carrinho: '))
-                    for produto in produtos.values():
-                        if produto.iden == prod_add and produto.estoque > 0 and usuario_atual.AdicionarCarrinho(prod_add):
-                            print(f'O produto {produto.nome} foi adicionado com sucesso. ')
+                    if not CarrinhoVazio():
+                        for produto in produtos.values():
+                            if produto.iden == prod_add and produto.estoque > 0 and usuario_atual.AdicionarCarrinho(prod_add):
+                                print(f'O produto {produto.nome} foi adicionado com sucesso. ')
+                                time.sleep(1)
+                                break
+                        else:
+                            print('Produto não encontrado.')
                             time.sleep(1)
-                            break
-                    else:
-                        print('Produto não encontrado.')
-                        time.sleep(1)
-                        continue
+                            continue
                     
                 elif opcao_carrinho == 3:
                     prod_rmv = int(input('Digite o ID do produto a ser removido do carrinho: '))
+                    
                     for produto in produtos.values():
                         if produto.iden == prod_rmv:
                             if usuario_atual.RemoverCarrinho(prod_rmv):
@@ -226,39 +220,41 @@ while escolha != 0:
                 
                 elif opcao_carrinho == 4:
                     carrinho = usuario_atual.GetCarrinho(produtos)
-                    if len(carrinho) == 0:
-                        print('O carrinho está vazio.')
-                        time.sleep(1)
-                        continue
+                    if len(carrinho) > 0:
 
-                    for produto in list(carrinho):
-                        quantidade = int(input(
-                            f'Digite a quantidade de "{produto.nome}" a ser comprada: '
-                        ))
-
-                        if quantidade <= 0:
-                            print('Quantidade inválida. Operação cancelada.')
+                        for produto in list(carrinho):
+                            quantidade = int(input(f'Digite a quantidade de "{produto.nome}" a ser comprada: '))
+    
+                            if quantidade <= 0:
+                                print('Quantidade inválida. Operação cancelada.')
+                                time.sleep(1)
+                                continue
+                            
+                            if produto.estoque < quantidade:
+                                print(
+                                    f'Estoque insuficiente para o produto {produto.nome}. '
+                                    f'Estoque atual: {produto.estoque}.'
+                                )
+                                time.sleep(1)
+                                continue
+                            
+                            if usuario_atual.Comprar(produto.iden, produtos, quantidade):
+                                print(f'O produto {produto.nome} foi comprado com sucesso.')
+                            else:
+                                print(f'Não foi possível comprar o produto {produto.nome}.')
                             time.sleep(1)
-                            continue
-
-                        if produto.estoque < quantidade:
-                            print(
-                                f'Estoque insuficiente para o produto {produto.nome}. '
-                                f'Estoque atual: {produto.estoque}.'
-                            )
-                            time.sleep(1)
-                            continue
-
-                        if usuario_atual.Comprar(produto.iden, produtos, quantidade):
-                            print(f'O produto {produto.nome} foi comprado com sucesso.')
-                        else:
-                            print(f'Não foi possível comprar o produto {produto.nome}.')
+                    else:
+                        print('O carrinho está vazio. Adicione produtos antes de finalizar a compra.')
                         time.sleep(1)
                         
                 else:
-                    print('Opção inválida. Por favor, escolha uma opção válida.')
-                    time.sleep(1)
-                    continue
+                    if usuario_atual is None:
+                        print('Você precisa estar logado para acessar essa opção.')
+                        time.sleep(1)
+                    else:
+                        print('Opção inválida. Por favor, escolha uma opção válida.')
+                        time.sleep(1)
+                        continue
 
             elif isinstance(usuario_atual, Vendedor) and menu2escolha == 5:
                 usuario_produtos = usuario_atual.VerProdutosVendedor()
@@ -269,6 +265,7 @@ while escolha != 0:
                 categoria_add = input('Digite a categoria do produto: ')
                 preco_add = float(input('Digite o preço do produto: '))
                 estoque_add = int(input('Digite o estoque atual: '))
+                categorias.add(categoria_add)
 
                 if preco_add < 0 or estoque_add < 0:
                     print('Preço ou estoque inválido. Operação cancelada.')
@@ -289,42 +286,52 @@ while escolha != 0:
                 time.sleep(1)
             elif isinstance(usuario_atual, Vendedor) and menu2escolha == 7:
                 # Atualizar preço do produto (vendedor)
-                id_preco = int(input('Digite o ID do produto: '))
-                novo_preco = float(input('Digite o novo preço do produto: '))
-                produto = produtos.get(id_preco)
-                if (
-                    produto is None
-                    or not any(item['ID'] == id_preco for item in usuario_atual.produtos)
-                ):
-                    print('Produto não encontrado entre os produtos deste vendedor.')
+                if len(usuario_atual.produtos) == 0:
+                    print('Você não possui produtos cadastrados.')
                     time.sleep(1)
                     continue
-                if novo_preco < 0:
-                    print('Preço negativo. Operação cancelada.')
+                else:
+                    id_preco = int(input('Digite o ID do produto: '))
+                    novo_preco = float(input('Digite o novo preço do produto: '))
+                    produto = produtos.get(id_preco)
+                    if (
+                        produto is None
+                        or not any(item['ID'] == id_preco for item in usuario_atual.produtos)
+                    ):
+                        print('Produto não encontrado entre os produtos deste vendedor.')
+                        time.sleep(1)
+                        continue
+                    if novo_preco < 0:
+                        print('Preço negativo. Operação cancelada.')
+                        time.sleep(1)
+                        continue
+                    usuario_atual.atualizaPreco(produto, novo_preco)
+                    print(f'O preço do produto {produto.nome} foi atualizado para {novo_preco}.')
                     time.sleep(1)
-                    continue
-                usuario_atual.atualizaPreco(produto, novo_preco)
-                print(f'O preço do produto {produto.nome} foi atualizado para {novo_preco}.')
-                time.sleep(1)
                 
             elif isinstance(usuario_atual, Vendedor) and menu2escolha == 8:
                 # Atualizar estoque do produto (vendedor)
-                id_estoque = int(input('Digite o ID do produto: '))
-                novo_estoque = int(input('Digite o novo estoque do produto: '))
-                produto = produtos.get(id_estoque)
-                if (
-                    produto is None
-                    or not any(item['ID'] == id_estoque for item in usuario_atual.produtos)
-                ):
-                    print('Produto não encontrado entre os produtos deste vendedor.')
+                if len(usuario_atual.produtos) == 0:
+                    print('Você não possui produtos cadastrados.')
                     time.sleep(1)
-                elif novo_estoque < 0:
-                    print('Estoque negativo. Operação cancelada.')
-                    time.sleep(1)
+                    continue
                 else:
-                    usuario_atual.atualizaEstoque(produto, novo_estoque)
-                    print(f'O estoque do produto {produto.nome} foi atualizado para {novo_estoque}.')
-                    time.sleep(1)
+                    id_estoque = int(input('Digite o ID do produto: '))
+                    novo_estoque = int(input('Digite o novo estoque do produto: '))
+                    produto = produtos.get(id_estoque)
+                    if (
+                        produto is None
+                        or not any(item['ID'] == id_estoque for item in usuario_atual.produtos)
+                    ):
+                        print('Produto não encontrado entre os produtos deste vendedor.')
+                        time.sleep(1)
+                    elif novo_estoque < 0:
+                        print('Estoque negativo. Operação cancelada.')
+                        time.sleep(1)
+                    else:
+                        usuario_atual.atualizaEstoque(produto, novo_estoque)
+                        print(f'O estoque do produto {produto.nome} foi atualizado para {novo_estoque}.')
+                        time.sleep(1)
             elif isinstance(usuario_atual, Vendedor) and menu2escolha == 9:
                 print(f'Faturamento: R$ {usuario_atual.faturamento:.2f}')
                 print('Vendas realizadas:')
