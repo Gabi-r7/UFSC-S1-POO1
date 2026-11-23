@@ -36,5 +36,3 @@ class Produto:
     def getInfo(self):
         return self.nome, self.iden, self.categoria, self.preco, self.estoque
     
-a1 = Produto('João', 123, 'Eletrodoméstico', 120, 10, 0)
-a2 = Produto('aaaa', 12, 'Eletrodoméstico', 100, 5, 0)
