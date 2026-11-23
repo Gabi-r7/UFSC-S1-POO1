@@ -29,12 +29,21 @@ def CarrinhoVazio():
 
 while escolha != 0:
 
-    escolha = int(input("\033[32m==================== Bem vindo ao eCommerce ====================\n1 - Menu de usuários\n2 - Menu de produtos\n0 - Sair\nDigite sua escolha: \033[0m"))
+    print("\033[32m==================== Bem vindo ao eCommerce ====================\n \033[0m")
+    if usuario_atual is not None:
+        print(f'Usuário logado: {usuario_atual.nome} \n')
+    
+    escolha = int(input("\033[32m1 - Menu de usuários\n2 - Menu de produtos\n0 - Sair\nDigite sua escolha: \033[0m"))
 
     if escolha == 1:
         menu1escolha = -1
         while menu1escolha != 0:
-            menu1escolha = int(input('\n-------------------- Menu de usuários --------------------\n1 - Cadastrar novo usuário\n2 - Fazer login\n3 - Listar vendedores\n4 - Deslogar\n0 - Voltar ao menu principal\nDigite sua escolha: '))
+            print('\n-------------------- Menu de usuários --------------------\n')
+            if usuario_atual is not None:
+                print(f'Usuário logado: {usuario_atual.nome} \n')
+
+            menu1escolha = int(input('1 - Cadastrar novo usuário\n2 - Fazer login\n3 - Listar vendedores\n4 - Deslogar\n0 - Voltar ao menu principal\nDigite sua escolha: '))
+            
             if menu1escolha == 1:
                 print('Cadastro de usuário')
                 idF += 1
@@ -106,8 +115,12 @@ while escolha != 0:
     elif escolha == 2:
         menu2escolha = -1
         while menu2escolha != 0:
-               
-            print('-------------------- Menu de produtos --------------------\n1 - Visualizar produtos\n2 - Adicionar um produto aos favoritos\n3 - Filtro de produtos\n4 - Opções do carrinho')
+
+            print('\n-------------------- Menu de produtos --------------------\n')
+            if usuario_atual is not None:
+                print(f'Usuário logado: {usuario_atual.nome} \n')
+            
+            print('1 - Visualizar produtos\n2 - Adicionar um produto aos favoritos\n3 - Filtro de produtos\n4 - Opções do carrinho')
 
             if isinstance(usuario_atual, Vendedor):
                 print('5 - Ver seus produtos (vendedor)\n6 - Adicionar produto (vendedor)\n7 - Atualizar preço do produto (vendedor)\n8 - Atualizar estoque do produto (vendedor)\n9 - Ver faturamento (vendedor)')

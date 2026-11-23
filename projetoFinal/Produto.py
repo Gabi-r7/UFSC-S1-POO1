@@ -1,4 +1,4 @@
-#PRODUTO
+    #PRODUTO
 class Produto:
     def __init__(self, nome, iden, categoria, preco, estoque, vendedor=None):
         self.nome = nome
