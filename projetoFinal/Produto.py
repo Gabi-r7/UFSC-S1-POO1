@@ -1,4 +1,4 @@
-#PRODUTO
+    #PRODUTO
 class Produto:
     def __init__(self, nome, iden, categoria, preco, estoque, vendedor=None):
         self.nome = nome
@@ -7,9 +7,6 @@ class Produto:
         self.preco = preco
         self.estoque = estoque
         self.vendedor = vendedor
-
-    def __repr__(self):
-        return self.__str__()
 
     def __str__(self):
         return (

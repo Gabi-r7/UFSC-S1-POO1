@@ -76,3 +76,31 @@ class Vendedor(Comprador):
         for item in self.produtos:
             print(f"ID: {item['ID']} | Nome: {item['Nome']} | "f"Categoria: {item['Categoria']} | Preço: R$ {item['Preço']:.2f} | "f"Estoque: {item['Estoque']}")
         return self.produtos
+
+    def Comprar(self, produto_id, produtos, quantidade):
+            if produto_id not in self.carrinho:
+                return False
+    
+            if produto_id not in produtos:
+                return False
+    
+            if produtos[produto_id].vendedor == self.iden:
+                print('Não é possível comprar seu próprio produto.')
+                return False
+    
+            produto = produtos[produto_id]
+            if quantidade <= 0:
+                print('Quantidade invalida.')
+                return False
+    
+            if produto.estoque < quantidade:
+                print(f"Estoque insuficiente para {produto.nome}.")
+                return False
+    
+            self.carrinho.remove(produto_id)
+            self.compras.append(produto)
+            self.valorGasto += produto.preco * quantidade
+    
+            if produto.vendedor is not None:
+                return produto.vendedor.Faturar(produto, quantidade)
+            return True

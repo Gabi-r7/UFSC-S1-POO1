@@ -69,8 +69,5 @@ class Comprador:
                 aux.append(produtos[produto_id])
         return aux
 
-    def GetCompras(self):
-        return self.compras
-
     def GetFavoritos(self):
         return self.favoritos
