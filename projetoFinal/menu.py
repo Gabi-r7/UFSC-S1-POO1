@@ -54,12 +54,12 @@ while escolha != 0:
                 tipo = int(input('Tipo (1 para comprador / 2 para vendedor): '))
 
                 if tipo == 1:
-                    usuario = Comprador(nome, senha, idF, email, endereco)
+                    usuario = Comprador(nome, senha, idF, email, endereco)  #Exemplo de instanciação de um comprador
                     compradores.append(usuario)
                     print('Usuário cadastrado com sucesso!')
                     time.sleep(1)
                 elif tipo == 2:
-                    usuario = Vendedor(nome, senha, idF, email, endereco)
+                    usuario = Vendedor(nome, senha, idF, email, endereco)   #Exemplo de instanciação de um vendedor
                     compradores.append(usuario)
                     vendedores.append(usuario)
                     print('Usuário cadastrado com sucesso!')
@@ -182,15 +182,22 @@ while escolha != 0:
                 elif auxFiltro == 2:
                     if not CarrinhoVazio():
                         preco_max = float(input('Digite o preço máximo: '))
+                        encontrou = False
                         for produto in produtos.values():
                             if produto.preco <= preco_max:
                                 print(f'ID: {produto.iden} | Nome: {produto.nome} | Categoria: {produto.categoria} | Preço: {produto.preco} | Estoque: {produto.estoque}')
-                        else:
+                                encontrou = True
+                        if not encontrou:
                             print('Não há produtos com preço menor ou igual ao valor informado.')
                             time.sleep(1)
 
+                else:
+                    print('Opção de filtro inválida. Por favor, escolha uma opção válida.')
+                    time.sleep(1)
+                    continue
+
             elif menu2escolha == 4 and usuario_atual is not None:
-                opcao_carrinho = int(input('Opções de Carrinho: \n1 - Ver carrinho\n2 - Adicionar ao carrinho\n3 - Remover do carrinho\n4 - Comprar carrinho\nDigite sua escolha: '))
+                opcao_carrinho = int(input('Opções de Carrinho: \n1 - Ver carrinho\n2 - Adicionar ao carrinho\n3 - Remover do carrinho\n4 - Comprar carrinho\n0 - Voltar\nDigite sua escolha: '))
 
                 if opcao_carrinho == 0:
                     continue
@@ -280,7 +287,7 @@ while escolha != 0:
                 estoque_add = int(input('Digite o estoque atual: '))
                 categorias.add(categoria_add)
 
-                if preco_add < 0 or estoque_add < 0:
+                if preco_add <= 0 or estoque_add <= 0:
                     print('Preço ou estoque inválido. Operação cancelada.')
                     time.sleep(1)
                     continue
@@ -314,8 +321,8 @@ while escolha != 0:
                         print('Produto não encontrado entre os produtos deste vendedor.')
                         time.sleep(1)
                         continue
-                    if novo_preco < 0:
-                        print('Preço negativo. Operação cancelada.')
+                    if novo_preco <= 0:
+                        print('Preço inválido. Operação cancelada.')
                         time.sleep(1)
                         continue
                     usuario_atual.atualizaPreco(produto, novo_preco)
@@ -365,7 +372,7 @@ while escolha != 0:
             else:
                 if menu2escolha == 0:
                     break
-                elif usuario_atual is None and menu2escolha in [2, 4, 5, 6, 7]:
+                elif usuario_atual is None and menu2escolha in [2, 4, 5, 6, 7, 8, 9, 10]:
                     print('Você precisa estar logado para acessar essa opção.')
                     time.sleep(1)
                 else:

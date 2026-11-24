@@ -35,10 +35,6 @@ class Comprador:
             return produto.vendedor.Faturar(produto, quantidade)
         return True
 
-    def FinalizarCarrinho(self, produtos):
-        for produto_id in list(self.carrinho):
-            self.Comprar(produto_id, produtos, quantidade=1)
-
     def FavoritarProduto(self, produto_id):
         if produto_id in self.favoritos:
             return False

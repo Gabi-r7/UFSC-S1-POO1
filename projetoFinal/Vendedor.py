@@ -67,7 +67,7 @@ class Vendedor(Comprador):
         self.atualizaEstoque(produto, produto.estoque - quantidade)
         return True
 
-    def VerProdutosVendedor(self):
+    def VerProdutosVendedor(self): #Exemplo de polimorfismo, pois o método é sobrescrito da classe Comprador
         if not self.produtos:
             print(f"Você não possui produtos cadastrados.")
             return []
