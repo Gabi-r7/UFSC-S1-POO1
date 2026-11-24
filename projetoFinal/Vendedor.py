@@ -84,7 +84,7 @@ class Vendedor(Comprador):
             if produto_id not in produtos:
                 return False
     
-            if produtos[produto_id].vendedor == self.iden:
+            if produtos[produto_id].vendedor.iden == self.iden:
                 print('Não é possível comprar seu próprio produto.')
                 return False
     

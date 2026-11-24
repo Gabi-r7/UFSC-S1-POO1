@@ -383,4 +383,7 @@ while escolha != 0:
     elif escolha == 0:
         escolha = int(input('Tem certeza que você quer encerrar o programa? Digite 0 para continuar ou qualquer número para cancelar: '))
     else:
-        pass
+        print('Opção inválida. Por favor, escolha uma opção válida.')
+        time.sleep(1)
+        continue
+
